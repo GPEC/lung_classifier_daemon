@@ -1,20 +1,19 @@
 # query REDCap
 import requests
-def get_rc_status():
+
+# query REDCap and get all data
+#
+# @input rc_api_url
+# @input api_token
+# @return list with all data on REDCap
+def get_rc_status(rc_api_url, api_token):
     data = {
-        'token': API_TOKEN,
+        'token': api_token,
         'content': 'record',
         'action': 'export',
         'format': 'json',
         'type': 'flat',
         'csvDelimiter': '',
-        'records[0]': '1',
-        'fields[0]': 'record_id',
-        'fields[1]': 'user_email',
-        'fields[2]': 'last_name',
-        'fields[3]': 'first_name',
-        'fields[4]': 'data_file',
-        'fields[5]': 'data_upload_complete',
         'rawOrLabel': 'raw',
         'rawOrLabelHeaders': 'raw',
         'exportCheckboxLabel': 'false',
@@ -22,7 +21,7 @@ def get_rc_status():
         'exportDataAccessGroups': 'false',
         'returnFormat': 'json'
     }
-    r = requests.post(RC_API_URL,data=data)
+    r = requests.post(rc_api_url,data=data)
     rc_d = list()
     if r.status_code==200:
         rc_d = r.json()
@@ -34,20 +33,22 @@ def get_rc_status():
 
 # function to download file given a redcap record_id
 # @input: record_id
+# @input rc_api_url
+# @input api_token
 # @data_file_name: file name of the uploaded file
-def get_rc_file(record_id, data_file_name):
+def get_rc_file(record_id, rc_api_url, api_token, data_file_name):
     data = {
-        'token': API_TOKEN,
+        'token': api_token,
         'content': 'file',
         'action': 'export',
-        'record': '1',
+        'record': record_id,
         'field': 'data_file',
         'event': '',
         'returnFormat': 'json'
     }
-    r = requests.post(RC_API_URL,data=data)
+    r = requests.post(rc_api_url,data=data)
     if r.status_code==200:
-        f = open(os.path.join(OUTPUT_DIR,"submission",str(record_id),data_file_name), 'wb')
+        f = open(data_file_name, 'wb')
         f.write(r.content)
         f.close()
 

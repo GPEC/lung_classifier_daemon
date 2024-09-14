@@ -1,2 +1,4 @@
-# lung_classifier_daemon
+# Lung Classifier Daemon
 Software daemon for monitoring and executing lung classifier codes
+
+Python codes
