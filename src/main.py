@@ -5,11 +5,8 @@ import os, time #, importlib
 os.chdir("C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon\\src")
 
 # locally defined library functions
-import config.constants as cst, query_redcap as rc, db_connection as db, process_submission as ps
+import config.constants as cst, query_redcap as rc, db_connection as db, ProcessSubmissionThread as pst
 # to manually/force reload library ... importlib.reload(rc)
-
-# create or load database
-conn = db.create_or_load_db(cst.SQLITE_FNAME)
 
 # iterate through all rows in rc_d and check if it represents a new submission
 # while file STOP_ME.txt does NOT exist
@@ -27,9 +24,9 @@ while not os.path.isfile(os.path.join(cst.OUTPUT_DIR+"STOP_ME.txt")):
 
     # iterate all rows in rc_d
     for rc_record in all_rc_records:
-        ps.process_submission(rc_record, cst.RC_API_URL, cst.API_TOKEN, conn, cst.OUTPUT_DIR)
+        thread = pst.ProcessSubmissionThread(rc_record, cst.RC_API_URL, cst.API_TOKEN, cst.SQLITE_FNAME, cst.OUTPUT_DIR)
+        thread.start()
         
-
     # sleep for 5 min
     print("go back to sleep")
     time.sleep(cst.MONITOR_TIME_INTERVAL_SEC)
