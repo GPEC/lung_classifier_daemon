@@ -21,11 +21,21 @@ def get_rc_status(rc_api_url, api_token):
         'exportDataAccessGroups': 'false',
         'returnFormat': 'json'
     }
+    # for testing only
+    #import config.constants as cst
+    #rc_api_url = cst.RC_API_URL
+    #api_token = cst.API_TOKEN
+
     r = requests.post(rc_api_url,data=data)
     rc_d = list()
+
     if r.status_code==200:
         rc_d = r.json()
-    
+        # NEED TO FILTER OUT records that are NOT complete!!!
+        for record in rc_d:
+            if record['data_upload_complete']!="2":
+                rc_d.remove(record) # remove non-submitted records
+                
     return rc_d
 
 #print('HTTP Status: ' + str(r.status_code))

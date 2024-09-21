@@ -1,5 +1,6 @@
 # lung classifier daemon
 import os, time #, importlib
+from datetime import datetime
 
 # set working directory:
 os.chdir("C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon\\src")
@@ -19,7 +20,7 @@ import config.constants as cst, query_redcap as rc, db_connection as db, Process
 
 while not os.path.isfile(os.path.join(cst.OUTPUT_DIR+"STOP_ME.txt")):
     # query redcap
-    print("query redcap ...")
+    print("query redcap ...", end=" ")
     all_rc_records = rc.get_rc_status(cst.RC_API_URL,cst.API_TOKEN)
 
     # iterate all rows in rc_d
@@ -27,8 +28,8 @@ while not os.path.isfile(os.path.join(cst.OUTPUT_DIR+"STOP_ME.txt")):
         thread = pst.ProcessSubmissionThread(rc_record, cst.RC_API_URL, cst.API_TOKEN, cst.SQLITE_FNAME, cst.OUTPUT_DIR)
         thread.start()
         
-    # sleep for 5 min
-    print("go back to sleep")
+    # sleep for MONITOR_TIME_INTERVAL_SEC 
+    print(datetime.now(),end=" ")
     time.sleep(cst.MONITOR_TIME_INTERVAL_SEC)
 
 
