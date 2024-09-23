@@ -21,7 +21,7 @@ import config.constants as cst, query_redcap as rc, db_connection as db, Process
 while not os.path.isfile(os.path.join(cst.OUTPUT_DIR+"STOP_ME.txt")):
     # query redcap
     print("query redcap ...", end=" ")
-    all_rc_records = rc.get_rc_status(cst.RC_API_URL,cst.API_TOKEN)
+    all_rc_records = rc.get_rc_status(cst.RC_API_URL, cst.API_TOKEN, cst.MONITOR_TIME_INTERVAL_SEC)
 
     # iterate all rows in rc_d
     for rc_record in all_rc_records:

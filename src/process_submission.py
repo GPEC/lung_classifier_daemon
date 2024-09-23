@@ -20,6 +20,8 @@ def is_submission_new(rc_record, output_dir):
 # @input output_dir (string; output folder)
 # @return null
 def process_submission(rc_record, api_url, api_token, conn, output_dir):
+    app_title = "Methylation Classifier for Squamous Cell Carcinoma Site of Origin"
+
     if is_submission_new(rc_record, output_dir):
         record_id = rc_record['record_id']
 
@@ -51,14 +53,15 @@ def process_submission(rc_record, api_url, api_token, conn, output_dir):
         db.sql(conn,sql_stm)
         
         
-        # 3. email user indicating that their files are received and will be processed
-        email_subject = "Thank you for submitting data to the Lung Cancer Methylation Classifier"
-        email_body = "Thank you for submitting your data to the Lung Cancer Methylation Classifier for analysis.  We will get back to you soon."
-        se.send_email(email_subject,email_body,smtp_user,user_email,email_server)
+        # 3. REDCap will send confirmation email to user indicating that their files are received and will be processed
+        # nothing to do here
 
         # 4. run classifier code
 
         # 5. email user back the results
+        email_subject = app_title+" - analysis result attached."
+        email_body = "Thank you for submitting your data to the "+app_title+" for analysis.  Your analysis result is attached."
+        se.send_email(email_subject,email_body,smtp_user,user_email,email_server)
 
         ### cleanup ###
         # disconnect from email server
