@@ -41,3 +41,12 @@ def disconnect_email_server(email_server):
     email_server.quit()
 
 
+if __name__ == '__main__':
+    # testing
+    import os
+    os.chdir("C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon\\src")
+    import password as pwd
+
+    email_server = se.connect_to_email_server("smtp.mail.ubc.ca",587,pwd.smtp_user,pwd.smtp_password)
+    se.send_email("testing","test email msg","map.core@ubc.ca","samuel.leung@vch.ca",email_server)
+    se.disconnect_email_server(email_server)
