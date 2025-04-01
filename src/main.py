@@ -2,8 +2,11 @@
 import os, time #, importlib
 from datetime import datetime
 
+# some constants
+WORKING_FOLDER = "/mnt/c/Users/samle/Documents/workspace/py/lung_classifier_daemon/src"
+
 # set working directory:
-os.chdir("C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon\\src")
+os.chdir(WORKING_FOLDER) 
 
 # locally defined library functions
 import config.constants as cst, query_redcap as rc, db_connection as db, ProcessSubmissionThread as pst
