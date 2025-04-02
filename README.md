@@ -32,3 +32,6 @@ Setup needed for this software daemon:
 - update main.py and constants.py with the relevant folder paths
 - create the following folders on the output folder e.g. 
     - C:\Users\samleung\Documents\workspace-py\lung_classifier_daemon_data\user_data
+
+Run daemon on Ubuntu
+> python3 /home/mapcore/lung_classifier_daemon/src/main.py > log.txt 2>&1 &

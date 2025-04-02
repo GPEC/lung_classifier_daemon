@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 # @return list with all data on REDCap
 def get_rc_status(rc_api_url, api_token, monitor_time_interval_sec):
     now = datetime.now()
-    four_hours_ago = now - timedelta(hours=(monitor_time_interval_sec+300)/3600) # want some overlap
+    forty_eight_hours_ago = now - timedelta(hours=48) # want some overlap
 
     data = {
         'token': api_token,
@@ -25,7 +25,7 @@ def get_rc_status(rc_api_url, api_token, monitor_time_interval_sec):
         'exportSurveyFields': 'false',
         'exportDataAccessGroups': 'false',
         'returnFormat': 'json',
-        'dateRangeBegin': four_hours_ago.strftime("%Y-%m-%d %H:%M:%S"),
+        'dateRangeBegin': forty_eight_hours_ago.strftime("%Y-%m-%d %H:%M:%S"),
         'dateRangeEnd': now.strftime("%Y-%m-%d %H:%M:%S")
     }
     # for testing only

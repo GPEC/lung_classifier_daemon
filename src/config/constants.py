@@ -23,7 +23,7 @@ smtp_server_port = 587
 mapcore_email = "map.core@ubc.ca"
 
 # template input data file
-input_template_fname = "data\\input_beta_example.txt"
+input_template_fname = os.path.join(WORKING_FOLDER,"data","input_beta_example.txt")
 
 # output folder
 # - folder for downloading files, storing result files
