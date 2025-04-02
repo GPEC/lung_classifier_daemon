@@ -1,7 +1,7 @@
 # set constants
 import os, pandas as pd
 
-# working/data folders
+# working/data folders - SERVER-SPECIFIC / NEED UPDATE
 WORKING_FOLDER = "C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon\\src"
 DATA_FOLDER = "C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon_data"
 

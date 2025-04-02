@@ -2,7 +2,7 @@
 import os, time #, importlib
 from datetime import datetime
 
-# some constants
+# some constants - SERVER-SPECIFIC / NEED UPDATE
 WORKING_FOLDER = "C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon\\src"
 
 # set working directory:
