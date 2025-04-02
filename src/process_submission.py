@@ -1,4 +1,4 @@
-import os, db_connection as db, query_redcap as rc, password as pwd, send_email as se, pandas as pd
+import os, shlex, db_connection as db, query_redcap as rc, password as pwd, send_email as se, pandas as pd
 import config.constants as cst
 from smtplib import SMTPServerDisconnected
 
@@ -42,6 +42,20 @@ def qc_input(template_fname, input_fname):
 
     return (len(error_msg)==0, error_msg)
 
+# send email to user with error message
+#
+# @input app_title - title of app
+# @input err_msg - the actual error message/content
+# @input user_email - user's email address
+# @input email_server - email server
+#
+# @return null
+def send_failed_email(app_title, err_msg, user_email, email_server):
+    email_subject = app_title+" - error encountered."
+    email_body = "Thank you for submitting your data to the "+app_title+" for analysis.  The following error(s) was detected in the input file.  Please kindly check your data file and re-submit."
+    email_body = email_body + "\n\n" + err_msg
+    se.send_email(email_subject, email_body, cst.mapcore_email, user_email, email_server)
+
 # main function to process submission
 #
 # @input rc_record (list)
@@ -61,10 +75,15 @@ def process_submission(rc_record, api_url, api_token, conn, output_dir):
         email_server = se.connect_to_email_server(cst.smtp_server_url,cst.smtp_server_port,pwd.smtp_user,pwd.smtp_password)
 
         # 1. create folder
+        if not os.path.exists(os.path.join(output_dir,"submission")):
+            os.mkdir(os.path.join(output_dir,"submission"))
         os.mkdir(os.path.join(output_dir,"submission",str(record_id)))
 
         # 2a. download file and store in folder
-        input_fname = os.path.join(output_dir,"submission",str(record_id),rc_record['data_file'])
+        record_output_dir = os.path.join(output_dir,"submission",str(record_id))
+        # note: we change file name since user may upload file name with spaces or special character
+        # that would create issues with os.system()
+        input_fname = os.path.join(record_output_dir,"input.txt") # rc_record['data_file'])
         rc.get_rc_file(\
             record_id, \
                 api_url, \
@@ -92,18 +111,30 @@ def process_submission(rc_record, api_url, api_token, conn, output_dir):
         if not qc_result[0]:
             # failed QC
             # 5. email user back the results
-            email_subject = app_title+" - error encountered."
-            email_body = "Thank you for submitting your data to the "+app_title+" for analysis.  The following error(s) was detected in the input file.  Please kindly check your data file and re-submit."
-            email_body = email_body + "\n\n" + qc_result[1]
-            se.send_email(email_subject,email_body,cst.mapcore_email,user_email,email_server)
-            return
-
-        # 4. run classifier code
-
-        # 5. email user back the results
-        email_subject = app_title+" - analysis result attached."
-        email_body = "Thank you for submitting your data to the "+app_title+" for analysis.  Your analysis result is attached."
-        se.send_email(email_subject,email_body,cst.mapcore_email,user_email,email_server)
+            send_failed_email(app_title, qc_result[1],user_email,email_server)
+        else:
+            # 4. run classifier code
+            classifier_py_fname = os.path.join(cst.WORKING_FOLDER,"classifier","classifier_wrapper.py")
+            probe_fname = os.path.join(cst.WORKING_FOLDER,"data","selected_probes.txt")
+            nn_fname = os.path.join(cst.WORKING_FOLDER,"data","nn_state.pt")
+            out_fname = os.path.join(record_output_dir,"output.tsv")
+            input_fname = input_fname
+            sys_cmd = cst.PYTHON_EXE + " " + classifier_py_fname + " -i " + input_fname + " -s " + probe_fname + " -n " + nn_fname + " -o " + out_fname
+            print(sys_cmd)
+            return_code = os.system(sys_cmd)
+            if return_code !=0:
+                # error encountered.
+                err_msg = "\n*** error log ***"
+                err_fname = os.path.join(record_output_dir,"validation_errors.log")
+                err_f = open(err_fname,mode="r")
+                for l in err_f.readlines():
+                    err_msg = err_msg+"\n"+l
+                send_failed_email(app_title, err_msg, user_email,email_server)
+            else:
+                # 5. email user back the results
+                email_subject = app_title+" - analysis result attached."
+                email_body = "Thank you for submitting your data to the "+app_title+" for analysis.  Your analysis result is attached."
+                se.send_email(email_subject,email_body,cst.mapcore_email,user_email,email_server,out_fname)
 
         ### cleanup ###
         # disconnect from email server

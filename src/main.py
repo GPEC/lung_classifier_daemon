@@ -3,7 +3,7 @@ import os, time #, importlib
 from datetime import datetime
 
 # some constants
-WORKING_FOLDER = "/mnt/c/Users/samle/Documents/workspace/py/lung_classifier_daemon/src"
+WORKING_FOLDER = "C:\\Users\\samleung\\Documents\\workspace-py\\lung_classifier_daemon\\src"
 
 # set working directory:
 os.chdir(WORKING_FOLDER) 

@@ -18,3 +18,10 @@ The software daemon assumes the following folder structure
 |-data (contains probe list and saved neural net model)
 |-user_data (contains user input files as well as the output/result files)
 |   - lcd.sqlite (database to store user input)
+
+
+
+Setup needed for this software daemon:
+- install the following packages: numpy, pandas, torch
+- create the following folders on the output folder e.g. 
+     - C:\Users\samleung\Documents\workspace-py\lung_classifier_daemon_data\user_data

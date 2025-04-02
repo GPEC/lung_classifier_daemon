@@ -1,6 +1,9 @@
 # moddule responsible for handling email related tasks
-import smtplib
+import os, smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 # set up connection to email server
 #
@@ -23,12 +26,25 @@ def connect_to_email_server(smtp_server, smtp_port, smtp_user, smtp_password):
 # @input smtp_user
 # @input recipient
 # @input email_server
+# @input attachment_path
 #
-def send_email(subject,body,smtp_user,recipient,email_server):
-    msg = MIMEText(body)
+def send_email(subject,body,smtp_user,recipient,email_server,attachment_path=""):
+    msg = MIMEMultipart()
+    msg.attach(MIMEText(body, "plain"))
     msg["Subject"] = subject
     msg["From"] = smtp_user
     msg["To"] = recipient
+
+    # attach file if specified
+    if attachment_path != "" :
+        with open(attachment_path, "rb") as attachment:
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(attachment.read())
+
+        # Encode file and add headers
+        encoders.encode_base64(part)
+        part.add_header("Content-Disposition", f"attachment; filename={os.path.basename(attachment_path)}")
+        msg.attach(part)
 
     # Send the email
     email_server.sendmail(smtp_user, recipient, msg.as_string())

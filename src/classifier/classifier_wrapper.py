@@ -65,13 +65,6 @@ def parse_args():
 
     return parser.parse_args()
 
-logging.basicConfig(
-    filename='validation_errors.log',
-    filemode='a',  # Append to existing log
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-
 def validate_tsv(filepath, max_columns=10000):
     try:
         df = pd.read_csv(filepath, sep='\t', index_col=0)
@@ -110,6 +103,14 @@ def process_files(files, output):
 
 def main():
     args = parse_args()
+
+    logging.basicConfig(
+        filename=os.path.join(os.path.dirname(args.output),'validation_errors.log'),
+        filemode='a',  # Append to existing log
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        level=logging.INFO
+    )
+
     CLASSES = ['BLCA', 'CESC', 'ESCA', 'HNSC', 'LUSC']
     num_classes = len(CLASSES)
 
