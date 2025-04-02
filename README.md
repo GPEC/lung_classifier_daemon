@@ -23,6 +23,10 @@ The software daemon assumes the following folder structure
 
 Setup needed for this software daemon:
 - install the following packages: numpy, pandas, torch
+- create and populate a file src/password.py
+    - file content:
+        smtp_user = [username for email server]
+        smtp_password = [password to email server]
 - update main.py and constants.py with the relevant folder paths
 - create the following folders on the output folder e.g. 
-     - C:\Users\samleung\Documents\workspace-py\lung_classifier_daemon_data\user_data
+    - C:\Users\samleung\Documents\workspace-py\lung_classifier_daemon_data\user_data
