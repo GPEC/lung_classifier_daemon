@@ -34,4 +34,4 @@ Setup needed for this software daemon:
     - C:\Users\samleung\Documents\workspace-py\lung_classifier_daemon_data\user_data
 
 Run daemon on Ubuntu
-> python3 /home/mapcore/lung_classifier_daemon/src/main.py > log.txt 2>&1 &
+> ./start_daemon.sh
