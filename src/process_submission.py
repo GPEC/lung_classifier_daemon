@@ -1,4 +1,4 @@
-import os, shlex, db_connection as db, query_redcap as rc, password as pwd, send_email as se, pandas as pd
+import os, logging, db_connection as db, query_redcap as rc, password as pwd, send_email as se, pandas as pd
 import config.constants as cst
 from smtplib import SMTPServerDisconnected
 
@@ -120,7 +120,8 @@ def process_submission(rc_record, api_url, api_token, conn, output_dir):
             out_fname = os.path.join(record_output_dir,"output.tsv")
             input_fname = input_fname
             sys_cmd = cst.PYTHON_EXE + " " + classifier_py_fname + " -i " + input_fname + " -s " + probe_fname + " -n " + nn_fname + " -o " + out_fname
-            print(sys_cmd)
+            logging.info("executing classifier ...")
+            logging.info(sys_cmd)
             return_code = os.system(sys_cmd)
             if return_code !=0:
                 # error encountered.
@@ -142,7 +143,7 @@ def process_submission(rc_record, api_url, api_token, conn, output_dir):
             se.disconnect_email_server(email_server)
         except SMTPServerDisconnected:
             # ignore error since email was sent already
-            print("SMTPServerDisconnected encountered.")
+            logging.exception("SMTPServerDisconnected encountered.")
 
 if __name__ == '__main__':
     import pandas as pd, os

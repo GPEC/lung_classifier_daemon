@@ -15,7 +15,7 @@ rc_token_d = pd.read_csv(RC_TOKEN_FNNAME)
 API_TOKEN = rc_token_d.query("server=='https://rc.med.ubc.ca/' and pid==1423")['token'][1]
 RC_API_URL = "https://rc.med.ubc.ca/redcap/api/"
 
-MONITOR_TIME_INTERVAL_SEC = 3600*3 # 3 hours
+MONITOR_TIME_INTERVAL_SEC = 1800 #3600*3 # 3 hours
 
 # email related config
 smtp_server_url = "smtp.mail.ubc.ca"

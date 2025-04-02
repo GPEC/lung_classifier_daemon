@@ -1,5 +1,5 @@
 # lung classifier daemon
-import os, time #, importlib
+import os, time, logging #, importlib
 from datetime import datetime
 
 # some constants - SERVER-SPECIFIC / NEED UPDATE
@@ -21,9 +21,16 @@ import config.constants as cst, query_redcap as rc, db_connection as db, Process
 #        - create folder
 #        - create thread to process submission
 
-while not os.path.isfile(os.path.join(cst.OUTPUT_DIR+"STOP_ME.txt")):
+logging.basicConfig(
+        filename=os.path.join(cst.DATA_FOLDER,"log_"+(datetime.today().strftime("%Y-%m-%d"))+".txt"),
+        filemode='a',  # Append to existing log
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        level=logging.INFO
+    )
+
+while not os.path.isfile(os.path.join(cst.DATA_FOLDER,"STOP_ME.txt")):
     # query redcap
-    print("query redcap ...", end=" ")
+    logging.info("query redcap ...")
     all_rc_records = rc.get_rc_status(cst.RC_API_URL, cst.API_TOKEN, cst.MONITOR_TIME_INTERVAL_SEC)
 
     # iterate all rows in rc_d
@@ -32,12 +39,9 @@ while not os.path.isfile(os.path.join(cst.OUTPUT_DIR+"STOP_ME.txt")):
         thread.start()
         
     # sleep for MONITOR_TIME_INTERVAL_SEC 
-    print(datetime.now(),end=" ")
+    #print(datetime.now(),end=" ")
+    logging.info("sleeping for "+str(cst.MONITOR_TIME_INTERVAL_SEC)+" seconds ...")
     time.sleep(cst.MONITOR_TIME_INTERVAL_SEC)
 
 
-# process submission
-# create a thread to do the processing
-
-
-# email response
+logging.info("daemon stopped.  bye.")
