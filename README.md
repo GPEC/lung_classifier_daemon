@@ -35,3 +35,8 @@ Setup needed for this software daemon:
 
 Run daemon on Ubuntu
 > ./start_daemon.sh
+
+To run classifier manually e.g.
+> python3 /mnt/c/Users/samle/Documents/workspace/py/lung_classifier_daemon/src/classifier/classifier_wrapper.py -i test
+_data.tsv -s selected_probes.txt -n nn_state.pt
+
