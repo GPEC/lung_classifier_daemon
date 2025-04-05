@@ -123,7 +123,10 @@ def process_submission(rc_record, api_url, api_token, conn, output_dir):
             logging.info("executing classifier ...")
             logging.info(sys_cmd)
             return_code = os.system(sys_cmd)
-            if return_code !=0:
+            # note capturing return code from os.system is NOT reliable
+            # check existance for output file instead
+            #if return_code !=0:
+            if not os.path.exists(out_fname):
                 # error encountered.
                 err_msg = "\n*** error log ***"
                 err_fname = os.path.join(record_output_dir,"validation_errors.log")
