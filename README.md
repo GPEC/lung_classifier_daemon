@@ -32,6 +32,8 @@ Setup needed for this software daemon:
 - update main.py and constants.py with the relevant folder paths
 - create the following folders on the output folder e.g. 
     - C:\Users\samleung\Documents\workspace-py\lung_classifier_daemon_data\user_data
+- make sure start_daemon.sh is exectuable
+> chmod +x start_daemon.sh
 
 Run daemon on Ubuntu
 > ./start_daemon.sh
