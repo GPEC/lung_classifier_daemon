@@ -140,6 +140,7 @@ def main():
             nn_output = F.softmax(net(input))
         
         output_confidence = pd.DataFrame(nn_output.to('cpu'), index=test_data.columns, columns = CLASSES)
+        output_confidence["Predicted Site of Origin"] = output_confidence.apply(lambda x: x.idxmax(), axis=1)
         output_confidence.to_csv(args.output, sep='\t')
     except Exception as e:
         logging.error(f"Exception caught: {e}")
