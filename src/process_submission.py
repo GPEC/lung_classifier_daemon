@@ -65,7 +65,7 @@ def send_failed_email(app_title, err_msg, user_email, email_server):
 # @input output_dir (string; output folder)
 # @return null
 def process_submission(rc_record, api_url, api_token, conn, output_dir):
-    app_title = "Methylation Classifier for Squamous Cell Carcinoma Site of Origin"
+    app_title = "SquaMOS (Squamous cell carcinoma Methylation for Origin Site)"
 
     if is_submission_new(rc_record, output_dir):
         record_id = rc_record['record_id']
